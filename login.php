@@ -31,9 +31,10 @@ if (isset($_POST ['Submit1'])){
 
 $users = array(
     //CT310 unknown password, known hash
+    //TODO: ADD Customer: Bob Ross
     "ct310" => "a6cebbf02cc311177c569525a0f119d7",
     "cjh" => "20ee80e63596799a1543bc9fd88d8878",
-    "jsearl" => "098f6bcd4621d373cade4e832627b4f6");
+    "jtperea" => "f869ce1c8414a264bb11e14a2c8850ed");
 
 date_default_timezone_set("America/Denver");
 
@@ -52,7 +53,8 @@ if (!$authorized && !$first_login) {
 } elseif ($authorized){
     echo "Welcome " . $usr . "!   <br>";$t=date('l jS \of F Y h:i:s A');
     echo($t . "</br>");
-//attempt to stay logged in - set authorized in the session TODO: FIND OUT WHEN TO END SESSION 
+//attempt to stay logged in - set authorized in the session TODO: FIND OUT WHEN TO END SESSION
+//TODO: Add Logout/update to jonathan's login/logout code?
 Session::create(); 
 Session::set('authorized', $authorized);
 } else {
