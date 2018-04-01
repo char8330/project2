@@ -4,14 +4,13 @@
 </header>
 <br>
 
-<!-- BODY TEXT -->
- We are a travel company based out of Fort Collins, Colorado trying to promote some of our lesser-known states. We have never been to South Dakota but highly recommend it to you, your family, and your friends!
+<!-- BODY TEXT --> We are a travel company based out of Fort Collins, Colorado trying to promote attractions around this great country.Quality content is added daily by our team of experienced administrators.         
 <br>
 <br>
- 
 
-For more information about us and why you should visit this great state contact us at 719-309-7222 or SouthDakota@travel.net
+For more information about us and why you should go travel the US now contact us at 719-309-7222 or harless_serea@travel@travel.net
     <br>
     <br>
 
 <?php echo $footer ?>
+
