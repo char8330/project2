@@ -6,15 +6,15 @@
   <title>South Dakota</title>
   <meta charset='utf-8'>
   <meta name='viewport' content='width=device-width, initial-scale=1'>
-  <meta name='description' content='Travel site for South Dakota'>
-  <meta name='keywords' content='Mt Rushmore, South Dakota, Travel, Badlands, Crazy Horse'>
-  <meta name='author' content='Cassidy Harless, Jack Searl'>
+  <meta name='description' content='Travel site for the United States'>
+  <meta name='keywords' content='United States, Travel, bald eagle, Mount Rushmore'>
+  <meta name='author' content='Cassidy Harless, Jonathan Perea'>
   <?php echo Asset::css('bootstrap.css');?>
   <?php echo Asset::css('southdakota.css');?>
   <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
   <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script>
 <div class="header">
-  <img src='http://cs.colostate.edu/~char8330/ct310/assets/img/logo.png' alt="logo" />
+  <img src='http://cs.colostate.edu/~char8330/ct310/assets/img/logo2.png' alt="logo" />
 </div>
 </head>
 
