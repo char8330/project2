@@ -27,7 +27,7 @@ The Badlands is a National Park in the southern part of the state. The area cont
 <div class='comments'>
     <p>Comments</p>
 
-<!-- A--Loads comments from prev sessions-->
+<!-- A. Loads comments from prev sessions-->
   <?php
   if($authorized = true){ //admin is logged in 
         //add comments from previous sessions (all admin)
@@ -43,7 +43,7 @@ The Badlands is a National Park in the southern part of the state. The area cont
   ?>
 
 </br>
-<!-- A--END: attempt to add prev comments-->
+<!-- A. END: attempt to add prev comments-->
 
 
     <?php $session = Session::instance();
