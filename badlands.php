@@ -44,8 +44,6 @@ The Badlands is a National Park in the southern part of the state. The area cont
 
 </br>
 <!-- A. END: attempt to add prev comments-->
-
-
     <?php $session = Session::instance();
     $authorized = $session->get('authorized');
     if(isset($authorized)){
@@ -55,14 +53,14 @@ The Badlands is a National Park in the southern part of the state. The area cont
         <?=$_POST['test'];$test=$_POST['test'];?>
        <!-- $test variable stores current comment, TODO: currently admin can only add one comment per session-->
 
-<?php
+    <?php
 //TODO: create column for which attraction the comment is on? Connect this to the correct page when loading
     list($insert_id, $rows_affected) = DB::insert('comments')->set(array( //adds 1 comment to db
-    'id' => 5, //TODO: make this update for each new comment
-    'user' => 'john@example.com', //TODO: update user to track who made the comment
-    'comm' => $test,
-))->execute();
-?>
+    	'id' => 5, //TODO: make this update for each new comment
+    	'user' => 'john@example.com', //TODO: update user to track who made the comment
+    	'comm' => $test,
+    ))->execute();
+    ?>
 
     <?php else: ?>
         <form method= "post">
