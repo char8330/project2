@@ -19,7 +19,8 @@ div.jumbotron {
     font-size: 38px;
     color:#ffffff;
     background-color:#084650;
-    background-image: url('http://cs.colostate.edu/~jsearl/ct310/assets/img/mt_r_monument_wiki.jpeg');
+    background-image: url('http://cs.colostate.edu/~char8330/ct310/assets/img/travel_usa.jpg');
+
     background-size: cover;
     height: 650px;
     margin-bottom: 0px;
@@ -28,7 +29,7 @@ div.jumbotron {
 .header img {
   float: right;
   width: 120px;
-  background-image: url('http://cs.colostate.edu/~jsearl/ct310/assets/img/logo.png');
+  background-image: url('http://cs.colostate.edu/~char8330/ct310/assets/img/logo2.png');
   height: 120px;
 }
 
