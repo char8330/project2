@@ -1,4 +1,3 @@
-<?php echo $header ?>
 <header>
     <h1 style="background-color: #53C7E9; color: #28829C">About Us</h1>
 </header>
@@ -11,6 +10,3 @@
 For more information about us and why you should go travel the US now contact us at 719-309-7222 or harless_serea@travel@travel.net
     <br>
     <br>
-
-<?php echo $footer ?>
-
