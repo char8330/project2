@@ -1,5 +1,3 @@
-<?php echo $header ?>
-  
 <div class='jumbotron text-center'>
   <h1 class='strokeme'>Tour the United States!</h1>
     <p class='strokeme'>Land of the Bald Eagle!</p>
@@ -23,6 +21,3 @@
     </div>
   </div>
 </div>
-
-<?php echo $footer ?>
-
