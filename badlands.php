@@ -1,5 +1,3 @@
-<?php echo $header ?>
-
 <!-- HEADERS -->
 <header>
     <h1 style="background-color: #53C7E9; color: #28829C">Badlands National Park</h1>
@@ -69,6 +67,3 @@ The Badlands is a National Park in the southern part of the state. The area cont
         </form>
     <?php endif; ?>
 </div>
-
-<?php echo $footer ?>
-
