@@ -1,6 +1,3 @@
-<?php echo $header ?>
-
-<!-- HEADERS -->
 <header>
     <h1 style="background-color: #53C7E9; color: #28829C">Mount Rushmore</h1>
 </header>
@@ -42,5 +39,3 @@ The memorial is open from 5 A.M. - 11:30 P.M. most days of the year. Entry is fr
         </form>
     <?php endif; ?>
 </div>
-
-<?php echo $footer ?>
