@@ -1,5 +1,3 @@
-<?php echo $header ?>
-
 <!-- HEADERS -->
 <header>
     <h1 style="background-color: #53C7E9; color: #28829C">Crazy Horse Memorial</h1>
@@ -39,5 +37,3 @@
         </form>
     <?php endif; ?>
 </div>
-
-<?php echo $footer ?>
