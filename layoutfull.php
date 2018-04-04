@@ -19,6 +19,14 @@
                                 <br>
 
                                 <li><a href="<?=Uri::create('index.php/southdakota/adminIndex'); ?>">Admin</a></li>
+                                <br>
+                                
+                                <li><a href="<?=Uri::create('index.php/southdakota/indexc'); ?>">Test Attraction Page (Comments/Brochure in Progress)</a></li>
+                                <br>
+                                
+                              
+                                
+                                
                         </ul>   
                         </h1>
                 </div>
@@ -26,7 +34,7 @@
                 <div id="header">
 					<h1>Travel Site
                         <div id="logo">
-							<?php echo Asset::img("SC_Logo.png",array("width" => "60"));?>
+							<?php echo Asset::img("SC_Logo.png",array("width" => "90"));?>
 				</div></h1>
 
                 </div> 
@@ -37,7 +45,7 @@
                 </div>
                <br>
                 <div id="footer">
-                        This site is part of a <a href="https://www.cs.colostate.edu/~ct310/">CT310</a> Course Project <a href="<?=Uri::create('index.php/sc/logout'); ?>">Logout</a></li>
+                        This site is part of a <a href="https://www.cs.colostate.edu/~ct310/">CT310</a> Course Project <a href="<?=Uri::create('index.php/southdakota/logout'); ?>">Logout</a></li>
 			
                 </div>
         </body>
