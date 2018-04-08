@@ -1,7 +1,7 @@
 
 <!-- HEADERS -->
 <header>
-    <h1 style="background-color: #53C7E9; color: #28829C">Badlands National Park</h1>
+    <h1 style="background-color: #53C7E9; color: #28829C"><?php echo $attractioninfo['firstName']?></h1>
 </header>
 </br>
 
@@ -11,7 +11,7 @@
 <h2>
 	Shop:
 	<span class="floatRight">
-		<a href="<?=Uri::create('index.php/southdakota/add'); ?>">+ Add Brochure</a>
+		<a href="<?=Uri::create('index.php/southdakota/add/'.$attractioninfo['attID']); ?>">+ Add Brochure</a>
 	</span>
 	<span class="floatClear"></span>
 </h2>
@@ -19,16 +19,18 @@
 <!--<h2>Your Cart:</h2> 
 
 <div class="h3Content">
-       <?php foreach($demos as $demo): ?> 
-			<?=$demo; ?><br>
-	<?php endforeach; ?>
+       <?php //foreach($demos as $demo): ?> 
+			//<?//=$demo; ?><br>
+	<?php //endforeach; ?>
 </div>
 -->
 
 
 <div>
+
+<?php echo $attractioninfo['descriptionName']?>
   <!-- BODY TEXT- populate with db vars -->
-The Badlands is a National Park in the southern part of the state. The area contains striking and jagged rock formations as well as a multitude of fossil beds. Many ancient mammals are thought to have roamed this area once, such as saber-toothed tigers. Today you can spot bison, prairie dogs and many bird species throughout it's flowing plains. There are many popular trails and day hikes for all abilities and ages in the Badlands National Park as well as two campgrounds and park ranger services and tours. The park spans over 200,000 acres and attracts around 1 million visitors each year. The park and campgrounds are open year-round. Don't forget your camera as there are many beautiful natural sight you will want to capture!
+
 <br>
 <br>
 </div>
@@ -75,11 +77,11 @@ The Badlands is a National Park in the southern part of the state. The area cont
         <?php $session = Session::instance();
         $cat = 5;
         $username = $session->get('username');
-        if($username === 'ct310' || $username === 'jtperea' || $username === 'cjh' || $username === 'aaronadmin' || $username === 'cjh' || $username === 'aaronadmin')
+        if($username === 'ct310' || $username === 'jtperea' || $username === 'aaronadmin' || $username === 'cjh' || $username === 'aaronadmin'|| $username === 'bobross')
                 { //TODO:  change to only work for customers?>
                 <!-- COMMENT - if customer just list all, else edit in boxes  -->
-                <?php foreach($demos as $demo): ?>
-			<?=$demo; ?><br>
+                <?php foreach($att as $a): ?>
+			<?=$a['user'].": ".$a['comm']; ?><br>
                 <?php endforeach; }?>
                 
 
@@ -87,19 +89,21 @@ The Badlands is a National Park in the southern part of the state. The area cont
 
         <?php $session = Session::instance();
         $username = $session->get('username');
-        if($username === 'ct310' || $username === 'jtperea' || $username === 'cjh' || $username === 'aaronadmin' || $username === 'cjh' || $username === 'aaronadmin')
+        if($username === 'ct310' || $username === 'jtperea' || $username === 'aaronadmin' || $username === 'cjh' || $username === 'aaronadmin')
                 { //TODO:  change to only work for admin ?> 
                 
                 <h4>Edit or Delete </h4>
                 <div class="h2Content">
                 <br>
                 <br>
-                <?php foreach($demos_comms as $demo): ?>
+                <?php foreach($att as $a): ?>
                 	<form method="post">
-                	 
-			<input type="text" value="<?php echo $demo;?>">
-			<input type="submit" value="Save Edits" />
-			<input type="submit" value="Delete" />
+			<input type="text" value="<?php echo $a['comm'];?>">
+			<a href="<?=Uri::create('index.php/southdakota/delete/'.$a['id']); ?>"
+		   onclick="return confirm('Are you sure you want to delete this?');">&#x1f5d1; Delete</a>
+		   <a href="<?=Uri::create('index.php/southdakota/edit/'.$a['id']); ?>">&#x270E; Save Edits</a>
+		   
+			
 			 <br>
                 <?php endforeach; }?>
 	

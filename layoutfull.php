@@ -21,9 +21,12 @@
                                 <li><a href="<?=Uri::create('index.php/southdakota/adminIndex'); ?>">Admin</a></li>
                                 <br>
                                 
-                                <li><a href="<?=Uri::create('index.php/southdakota/indexc'); ?>">Test Attraction Page (Comments/Brochure in Progress)</a></li>
+                                
+                                 <li><a href="<?=Uri::create('index.php/southdakota/allattractions'); ?>"> All Attractions</a></li>
                                 <br>
                                 
+                                 <li><a href="<?=Uri::create('index.php/southdakota/indexbrochure'); ?>"> Cart</a></li>
+                                <br>
                               
                                 
                                 
