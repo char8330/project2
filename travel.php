@@ -1,15 +1,20 @@
 <?php
-
 namespace Model;
-
 class travel
 {
 	const FILENAME = "travel.model";
-
 	private $field_values = array();
-
 	private $isStoredRecord = false;
-
+	
+	
+	
+	public function __setcomments()
+	{
+	
+	
+	}
+	
+	
 	public function __construct($id = null)
 	{
 		if($id !== null)
@@ -30,22 +35,18 @@ class travel
 			}
 		}
 	}
-
 	public function __get($name)
 	{
 		return $this->field_values[$name];
 	}
-
 	public function __set($name, $value)
 	{
 		$this->field_values[$name] = $value;
 	}
-
 	public function __isset($name)
 	{
 		return isset($this->field_values[$name]);
 	}
-
 	public function save()
 	{
 		$data = array();
@@ -57,7 +58,6 @@ class travel
 		file_put_contents(self::FILENAME, serialize($data));
 		$this->isStoredRecord = true;
 	}
-
 	public static function getAll()
 	{
 		$return = array();
@@ -66,12 +66,12 @@ class travel
 			$data = unserialize(file_get_contents(self::FILENAME));
 			foreach($data as $id => $model)
 			{
-				$return[$id] = new SC($model);
+	//			$return[$id] = new SC($model); // TODO: FIND WHY THIS LINE IS MESSING UP MY PAGES 
+	return $return;
 			}
 		}
 		return $return;
 	}
-
 	public function delete()
 	{
 		$data = array();
@@ -84,9 +84,15 @@ class travel
 		file_put_contents(self::FILENAME, serialize($data));
 		$this->isStoredRecord = false;
 	}
-
 	public function __toString()
 	{
 		return $this->id . '-' . $this->name;
+	}
+	public function setAll($post)
+	{
+		foreach($post as $field => $value)
+		{
+			$this->{$field} = $value;
+		}
 	}
 }
