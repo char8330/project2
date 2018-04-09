@@ -75,36 +75,25 @@ class Controller_SouthDakota extends Controller
 	 
 	 
 	 public function action_indexc($id)
-	{//new add4/8 - $id^^^ and below...
-	
-	
-	
-	//end new add 4/8
-	
-	
-	
-	
+	{
+
 		//load the layout
 		$layout = View::forge('southdakota/layoutfull');
 		
 		//load the view
 		$content = View::forge('southdakota/indexc'); //TODO: change this later to commentes/badlands
-                
-                
-                
-                
                 $demo = Ormattraction::find($id); //extract attraction from id 
-                
-
 		$content->set_safe('attractioninfo', $demo);
-
-		
-                
-                
                 
 		//get all courses using the ORM object
-		$courses = Ormtravel::find('all'); //this is the array
-
+		//$courses = Ormtravel::find('all'); //this is the array
+                $courses = ormtravel::find('all', array('where' => array('attraction' => $demo['firstName'])));
+                $content->set_safe('att', $courses);
+                if ($courses == NULL) {		
+                        echo 'it is null'; $layout->content = Response::forge($content);
+                        return $layout;
+                        }else{
+                        
 		$CoursesString;
 		$JustComments;
 
@@ -127,7 +116,7 @@ class Controller_SouthDakota extends Controller
 		//forge inner view
 		$layout->content = Response::forge($content);
 
-		return $layout;
+		return $layout;}
 		
 	}
 	
@@ -152,7 +141,9 @@ class Controller_SouthDakota extends Controller
 	{ 
                         $entry = ormtravel::find($id);
                         //$entry->id = 'My first edit';
-                        //$entry->user = $username; //TODO: edits keep name of org poster or admin who edited? 0- attach to each $demo 
+                        //$entry->user = $username; //TODO: edits keep name of org poster or admin who edited? 0- attach to each $demo
+                        
+                    
                         $entry->comm = 'fish edited';
                         $entry->save();
                 // attach urls to correct attraction index ....indexc/attractionttitle ideally 
@@ -224,6 +215,10 @@ class Controller_SouthDakota extends Controller
 		$new->id = $name; //TODO: don't specify - autoincrement
 		$new->user = $username;
 		$new->comm = $assignments;
+				
+		
+		$att= ormattraction::find($id);
+		$new->attraction = $att['firstName'];
 
 		//save the ORM object
 		$new->save();
@@ -247,7 +242,49 @@ class Controller_SouthDakota extends Controller
 	 ///brochure
 	 
 	 
-	 
+	       public function action_order($id)
+	{ 
+                        $courses = ormbrochure::find('all'); // find brochure related to specific attraction 
+                // attach urls to correct attraction index ....indexc/attractionttitle ideally 
+                
+                //delete entire list of brcoochures
+ 
+		//this loop converts all courses to a single string and stores them in $CoursesString
+		foreach($courses as $key=>$course)
+		{
+			$CoursesString[$key] = $course['attraction'].": ".$course['quantity'].",\n "; //add attraction col
+		
+		}
+                $msg=implode(" ",$CoursesString);
+		//set the courses to the view for printing
+		//$content->set_safe('demos', $CoursesString); //demos? 
+		
+		//$content->set_safe('att', $courses);
+		
+		
+                $session = Session::instance();
+                $username = $session->get('username');
+                if ($username === 'cjh'){
+		mail("cassidyharless95@gmail.com","Your Recent Brochure Order",$msg);
+		}
+                if ($username === 'jtperea'){
+		mail("jtperea@rams.colostate.edu","Your Recent Brochure Order",$msg);
+		}
+                
+                
+                //$used = ormtravel::find('all', array('where' => array('attraction' => $demo['firstName'])));
+                // prepare a delete statement// prep 
+                //$query = DB::delete('user');
+
+                // Set the table to delete from
+               // $query->table('brochure')->execute();
+                
+                //$b = ormbrochure::find($id);
+		//$gone = $demo->__toString();
+		//$b->delete();
+                
+                Response::redirect('index.php/southdakota/indexbrochure');
+	}
 	 
 	 
 	 
@@ -264,8 +301,12 @@ class Controller_SouthDakota extends Controller
                 $session = Session::instance();
                 $username = $session->get('username');
 	
-		//get all courses using the ORM object
-		$courses = Ormbrochure::find('all');
+		//get all courses using the ORM object - change to get ALL from ONE USER ---username 
+		//$courses = Ormbrochure::find('all');
+		
+		// find all articles from category 1 order descending by date
+                $courses = ormbrochure::find('all', array('where' => array('user' => $username)));
+                
                 $content->set_safe('brochures', $courses); //demos? 
 
                 
@@ -276,6 +317,28 @@ class Controller_SouthDakota extends Controller
 		return $layout;
 		
 	}
+	
+	public function post_indexbrochure($id) //prev post add
+	{
+	
+	
+	 $session = Session::instance();
+	$username = $session->get('username');
+	//if logged in 
+	if($username === 'ct310' || $username === 'jtperea' || $username === 'cjh' || $username === 'aaronadmin'){
+	
+		if (isset($_POST['comment2'])) {
+		$assignments = $_POST['comment2'];
+
+		
+		}
+
+		//reload the index page with the newly saved view
+		Response::redirect('index.php/southdakota/indexc/'.$id);
+		
+		}else{  Response::redirect('index.php/southdakota/login');} // make another view to add line: "Login to make comments"
+	}
+	 
 
 	public function get_add($attid) //not in use atm 
 	{
