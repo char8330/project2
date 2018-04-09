@@ -514,6 +514,37 @@ class Controller_SouthDakota extends Controller
                 $layout->content = Response::forge($content);
                 return $layout;
         }
+
+            //		SEND EMAIL FOR PASSWORD RESET		//
+        	public function action_forgot()
+	{
+		$layout = View::forge('southdakota/layoutfull');
+		$content = View::forge('southdakota/forgot');
+		$session = Session::instance();
+		$username = $session->get('username');
+		$id = $session->get('userid');
+		$travels = travel::getAll();
+		$content->set_safe('travels', $travels);
+		//RETURN NORMAL LAYOUT
+		$layout->content = Response::forge($content);
+		return $layout;
+	}
+
+	       //			PASSWORD RESET			//
+        	public function action_reset()
+	{
+		$layout = View::forge('southdakota/layoutfull');
+		$content = View::forge('southdakota/reset');
+		$session = Session::instance();
+		$username = $session->get('username');
+		$id = $session->get('userid');
+		$travels = travel::getAll();
+		$content->set_safe('travels', $travels);
+		//RETURN NORMAL LAYOUT
+		$layout->content = Response::forge($content);
+		return $layout;
+	}
+
 //		LOGIN SECTION		//
 	public function action_login()
         {
