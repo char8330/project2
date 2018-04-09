@@ -15,8 +15,66 @@ class Controller_SouthDakota extends Controller
 	 * Shows a list of all travel items
 	 */
 	 
-
 	 
+	       public function get_addEdit($id = null)
+        {
+                $session = Session::instance();
+                $username = $session->get('username');
+                if($username === 'ct310' || $username === 'jtperea' || $username === 'cjh' || $username === 'aaronadmin')
+                {
+                        $layout = View::forge('southdakota/layoutfull');
+                        $content = View::forge('southdakota/addEdit');
+                        $tr = new travel($id);
+                        $content->set_safe('tr', $tr);
+                        $layout->content = Response::forge($content);
+                        return $layout;
+                }
+                //else shows nothing
+        }
+                public function post_addEdit()
+        {
+                $session = Session::instance();
+                $username = $session->get('username');
+	
+                if($username === 'ct310' || $username === 'jtperea' || $username === 'cjh' || $username === 'aaronadmin')
+                {
+                
+                $result = DB::select ('attID')->from('a')->execute(); // TODO: check if empty/no previous comments
+                $count = sizeof($result);
+	        $name = $count ; //mt_rand() / mt_getrandmax();
+	        
+                	$tr = new ormattraction();
+	                $tr->attID = $name;
+	                $tr->firstName = $_POST['att_title'];
+          	        $tr->descriptionName = $_POST['att_description'];
+                	$tr->save();
+	                Response::redirect('index.php/southdakota/allattractions');
+		}
+		//else shows nothing
+        }
+
+	        public function action_adminIndex()
+        {
+		$session = Session::instance();
+                $username = $session->get('username');
+		if($username === 'ct310' || $username === 'jtperea' || $username === 'cjh' || $username === 'aaronadmin')
+		{
+                	$layout = View::forge('southdakota/layoutfull');
+        	        $content = View::forge('southdakota/adminIndex');
+	
+                	$travels = travel::getAll();
+        	        $content->set_safe('travels', $travels);
+	                $layout->content = Response::forge($content);
+                	return $layout;
+                	
+                	
+                	
+                	
+                	
+                	
+		}else{echo "You must be an admin to access this page! Please login with your admin id";}
+		//else shows nothing
+        }
 	 
 	 
 	 //all attractions
@@ -137,17 +195,19 @@ class Controller_SouthDakota extends Controller
 	//}
 	
 	
-                public function action_edit($id)
+                public function post_edit()
 	{ 
-                        $entry = ormtravel::find($id);
-                        //$entry->id = 'My first edit';
+                        $entry = ormtravel::find( $_POST['id']);
                         //$entry->user = $username; //TODO: edits keep name of org poster or admin who edited? 0- attach to each $demo
+                        $att_name = $_POST['attraction_name'];
+                        $newcomment = $_POST['textcomms'];
                         
-                    
-                        $entry->comm = 'fish edited';
+                        $courses = ormattraction::find('first', array('where' => array('firstName' => $att_name)));
+                        
+                        $entry->comm = $newcomment;
                         $entry->save();
                 // attach urls to correct attraction index ....indexc/attractionttitle ideally 
-                Response::redirect('index.php/southdakota/allattractions');
+                Response::redirect('index.php/southdakota/indexc/'.$courses['attID']);
 	}
 	
 	
@@ -243,8 +303,9 @@ class Controller_SouthDakota extends Controller
 	 
 	 
 	       public function action_order($id)
-	{ 
-                    $courses = ormbrochure::find('all'); // find brochure related to specific attraction 
+	{       $session = Session::instance();
+                $username = $session->get('username');
+                $courses = ormbrochure::find('all', array('where' => array('user' => $username)));// find brochure related to specific attraction 
                 // attach urls to correct attraction index ....indexc/attractionttitle ideally 
                 
                 //delete entire list of brcoochures
@@ -519,53 +580,8 @@ class Controller_SouthDakota extends Controller
 		}
 		//else show nothing
         }
-	        public function action_adminIndex()
-        {
-		$session = Session::instance();
-                $username = $session->get('username');
-		if($username === 'ct310' || $username === 'jtperea' || $username === 'cjh' || $username === 'aaronadmin')
-		{
-                	$layout = View::forge('southdakota/layoutfull');
-        	        $content = View::forge('southdakota/adminIndex');
-	
-                	$travels = travel::getAll();
-        	        $content->set_safe('travels', $travels);
-	                $layout->content = Response::forge($content);
-                	return $layout;
-                	
-		}else{echo "You must be an admin to access this page! Please login with your admin id";}
-		//else shows nothing
-        }
-	       public function get_addEdit($id = null)
-        {
-                $session = Session::instance();
-                $username = $session->get('username');
-                if($username === 'ct310' || $username === 'jtperea' || $username === 'cjh' || $username === 'aaronadmin')
-                {
-                        $layout = View::forge('southdakota/layoutfull');
-                        $content = View::forge('southdakota/addEdit');
-                        $tr = new travel($id);
-                        $content->set_safe('tr', $tr);
-                        $layout->content = Response::forge($content);
-                        return $layout;
-                }
-                //else shows nothing
-        }
-        public function post_addEdit($id = null)
-        {
-                $session = Session::instance();
-                $username = $session->get('username');
-	
-                if($username === 'ct310' || $username === 'jtperea' || $username === 'cjh' || $username === 'aaronadmin')
-                {
-                	$tr = new travel($id);
-	                $tr->id = $_POST['id'];
-          	        $tr->name = $_POST['name'];
-                	$tr->save();
-	                Response::redirect('index.php/southdakota/adminIndex');
-		}
-		//else shows nothing
-        }
+	 
+	 
         public function action_delete2($id)
         {
                 $session = Session::instance();
