@@ -1,5 +1,5 @@
-html {
-    position: relative;
+e
+sition: relative;
     min-height: 100%;
 }
 
@@ -43,7 +43,7 @@ ul.special-list {
 }
 
 /* TOP NAV BAR*/
-div.top-navbar{
+/*nav.top-navbar{
     overflow: hidden;
     position: fixed;
     display: table-row;
@@ -51,19 +51,37 @@ div.top-navbar{
     width: 100%;
     background-color: #E8AB70;
     text-align:center;
+}*/
+ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #E8AB70;
+}
+li{
+    float: left;
+    border-right: 1px solid #bbb;
 }
 
 /* NAV BAR LINKS */
-div.top-navbar a{
+li a{
+    display: block;
     color: #ffffff;
+    text-align: center;
     padding: 14px 16px;
+    /*padding: 14px 16px;*/
     text-decoration: none;
 }
 
 /* NAV BAR HOVER */
-div.top-navbar a:hover {
+li a:hover {
     background-color: #53C7E9;
     color: #9C6128;
+}
+
+li:last-child {
+    border-right: none;
 }
 
 .footer {
@@ -115,3 +133,4 @@ div.comments{
     margin-left: 5px;
     text-align: left;
 }
+
