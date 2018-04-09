@@ -70,7 +70,8 @@
 <h4>Past Comments: </h4>
 
 
-
+<?php if (isset($att)|| $att!= NULL): //IF DB is empty ?> 	
+                       
 
 <div class="h2Content">
 
@@ -80,6 +81,7 @@
         if($username === 'ct310' || $username === 'jtperea' || $username === 'aaronadmin' || $username === 'cjh' || $username === 'aaronadmin'|| $username === 'bobross')
                 { //TODO:  change to only work for customers?>
                 <!-- COMMENT - if customer just list all, else edit in boxes  -->
+
                 <?php foreach($att as $a): ?>
 			<?=$a['user'].": ".$a['comm']; ?><br>
                 <?php endforeach; }?>
@@ -98,8 +100,8 @@
                 <br>
                 <?php foreach($att as $a): ?>
                 	<form method="post">
-			<input type="text" value="<?php echo $a['comm'];?>">
-			<a href="<?=Uri::create('index.php/southdakota/delete/'.$a['id']); ?>"
+			<input type="text" name="textcomms" value="<?php echo $a['comm'];?>">
+			<a href="<?=Uri::create('index.php/southdakota/delete/'.$a['id']);  ?>"
 		   onclick="return confirm('Are you sure you want to delete this?');">&#x1f5d1; Delete</a>
 		   <a href="<?=Uri::create('index.php/southdakota/edit/'.$a['id']); ?>">&#x270E; Save Edits</a>
 		   
@@ -110,3 +112,4 @@
 	
                 <br>
 </div>	
+<?php endif;?>
