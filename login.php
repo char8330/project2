@@ -1,4 +1,3 @@
-<html>
 <head>
 	<title>Login Page</title>
 </head>
@@ -12,8 +11,6 @@
 		<input type="password" name="password" placeholder="password"/> 
 		<input type="submit" value="submit">
 	</form>
-
+	<h3><a href="<?=Uri::create('index.php/southdakota/forgot'); ?>">Forgot Password?</a></h3>
 	
 </body>
-</html>
-
