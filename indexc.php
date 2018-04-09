@@ -17,7 +17,6 @@
 </h2>
 
 <!--<h2>Your Cart:</h2> 
-
 <div class="h3Content">
        <?php //foreach($demos as $demo): ?> 
 			//<?//=$demo; ?><br>

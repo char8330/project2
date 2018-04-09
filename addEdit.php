@@ -1,12 +1,19 @@
+
 <div class="h2Content">
-	Add or Edit
+	Add Attraction
+                <br>
+		<br>
 	<form method="post">
-                <label for="id">ID: </label>
-                <input type="text" name="id" value="<?=isset($travel->id)?$travel->id:''; ?>" />
+                <label for="id">Attraction Title: </label>
+
+                <input type="text" name="att_title" />
                 <br />
-		<label for="name">Attraction Name:</label>
-		<input type="text" name="name" value="<?=isset($travel->name)?$travel->name:''; ?>" />
+                <br>
+		<label for="name">Copy and Paste Attraction Description Here:</label>
+		<input type="text" name="att_description" style="width:100px; height:40px;" />
 		<br />
-		<input type="submit" value="Add/Edit" />
+		<input type="submit" value="Add" />
+		<br>
+		<br>
 	</form>
 </div>

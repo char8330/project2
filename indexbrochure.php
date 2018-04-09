@@ -4,6 +4,9 @@
 </h2>
 
 <div class="h2Content">
+
+               <?php if ($brochures != NULL): ?>	
+
 	<?php foreach($brochures as $b):  //TODO: ONLY GET ELEMENTS FROM 1 USER who is LOGGED in - check logged in too -- CURRENTLY BEING BAD?>
 	
 	
@@ -26,3 +29,4 @@
 	</form> 
 </div>
 </div>
+<?php endif; ?>
