@@ -244,12 +244,13 @@ class Controller_SouthDakota extends Controller
 	 
 	       public function action_order($id)
 	{ 
-                        $courses = ormbrochure::find('all'); // find brochure related to specific attraction 
+                    $courses = ormbrochure::find('all'); // find brochure related to specific attraction 
                 // attach urls to correct attraction index ....indexc/attractionttitle ideally 
                 
                 //delete entire list of brcoochures
  
 		//this loop converts all courses to a single string and stores them in $CoursesString
+		
 		foreach($courses as $key=>$course)
 		{
 			$CoursesString[$key] = $course['attraction'].": ".$course['quantity'].",\n "; //add attraction col
@@ -305,6 +306,7 @@ class Controller_SouthDakota extends Controller
 		//$courses = Ormbrochure::find('all');
 		
 		// find all articles from category 1 order descending by date
+		
                 $courses = ormbrochure::find('all', array('where' => array('user' => $username)));
                 
                 $content->set_safe('brochures', $courses); //demos? 
