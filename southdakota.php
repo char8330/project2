@@ -511,7 +511,7 @@ class Controller_SouthDakota extends Controller
                         $content->set_safe('id',$id);
                         $layout->content = Response::forge($content);
                         return $layout;
-                }
+ 	       }
 		//RETURNS NORMAL LAYOUT
                 $layout->content = Response::forge($content);
                 return $layout;
@@ -522,31 +522,126 @@ class Controller_SouthDakota extends Controller
 	{
 		$layout = View::forge('southdakota/layoutfull');
 		$content = View::forge('southdakota/forgot');
-//		$session = Session::instance();
+               
+		//$key = $_POST['ah'];
+		//$courses = ormusers::find('first',  array('where' => array('secretKey' => $key)));
+//			$courses = ormusers::find('all');
+//                $content->set_safe('key', $courses['secretKey']); //demos? 
+	//		$content->set_safe('key', $courses);
 
-		$username = \DB::select('username')->from('users');
-//		$userID = Session::get->('userid');
-		$secretKey = md5(uniqid($username), true);
-		$query = \DB::update('users');
-		$query->value('secretKey', $secretKey);
-		$travels = travel::getAll();
-		$content->set_safe('travels', $travels);
-		//RETURN NORMAL LAYOUT
+				$travels = travel::getAll();
+                $content->set_safe('travels', $travels);
+				$secretKey = base64_encode(openssl_random_pseudo_bytes(32));
+
+                $mailTo = Input::param("email");
+
+				$username = ormusers::find('first', array('where' => array ('email' => $mailTo)));
+				echo $username['username'];
+
+                //$username = \DB::select('username')->from('users');
+
+               // $mailTo = Input::param("email");
+		$layout = View::forge('southdakota/layoutfull');
+				$content = View::forge('southdakota/forget2');
+				$travels = travel::getAll();
+                $content->set_safe('travels', $travels);
+				$secretKey = base64_encode(openssl_random_pseudo_bytes(32));
+
+                $mailTo = Input::param("email");
+
+				$username = ormusers::find('first', array('where' => array ('email' => $mailTo)));
+				echo $username['username'];
+
+                //$username = \DB::select('username')->from('users');
+
+               // $mailTo = Input::param("email");
+                echo $mailTo;
+                if(isset($mailTo)){
+
+                $subject = "Password Reset";
+                $content = 'Please follow this link to reset password https://www.cs.colostate.edu/~jtperea/ct310/index.php/southdakota/reset/'.$secretKey;
+                error_reporting(0);
+               if(mail($mailTo, $subject, $content)){
+                                echo "<p>Reset link sent to $mailTo</p>";
+                        }
+                        else {
+                                echo "<p>There was an error trying to reset your password.</p>\n";
+                        }                echo $mailTo;
+                if(isset($mailTo)){
+
+                $subject = "Password Reset";
+                $content = 'Please follow this link to reset password https://www.cs.colostate.edu/~jtperea/ct310/index.php/southdakota/reset/'.$secretKey;
+                error_reporting(0);
+               if(mail($mailTo, $subject, $content)){
+                                echo "<p>Reset link sent to $mailTo</p>";
+                        }
+                        else {
+                                echo "<p>There was an error trying to reset your password.</p>\n";
+                        }
+        }
+				//$username = ormusers::find('first', array('where' => array ('email' => $mailTo)));
+				//echo $username['username'];
+				
+				//$username->secretKey = '111111'; //$secretKey;
+				//$username->save();
+                $query = \DB::update('users');
+                $query->value('secretKey', $secretKey)->execute();
+                
+				
+
 		$layout->content = Response::forge($content);
 		return $layout;
 	}
+	
+	/*public function action_forgot2(){
+			$travels = travel::getAll();
+                $content->set_safe('travels', $travels);
+				$secretKey = base64_encode(openssl_random_pseudo_bytes(32));
+
+                $mailTo = Input::param("email");
+
+				$username = ormusers::find('first', array('where' => array ('email' => $mailTo)));
+				echo $username['username'];
+
+                //$username = \DB::select('username')->from('users');
+
+               // $mailTo = Input::param("email");
+                echo $mailTo;
+                if(isset($mailTo)){
+
+                $subject = "Password Reset";
+                $content = 'Please follow this link to reset password https://www.cs.colostate.edu/~jtperea/ct310/index.php/southdakota/reset/'.$secretKey;
+                error_reporting(0);
+               if(mail($mailTo, $subject, $content)){
+                                echo "<p>Reset link sent to $mailTo</p>";
+                        }
+                        else {
+                                echo "<p>There was an error trying to reset your password.</p>\n";
+                        }
+        }
+	}*/
 
 	       //			PASSWORD RESET			//
         	public function action_reset($key)
 	{
 		$layout = View::forge('southdakota/layoutfull');
 		$content = View::forge('southdakota/reset');
+
+                $travels = travel::getAll();
+                $content->set_safe('travels', $travels);
+                $layout->content = Response::forge($content);
+
 		$username = \DB::select('username')->from('users');
 		$secretKey = \DB::select('secretKey')->from('users');
-		$travels = travel::getAll();
-		$content->set_safe('travels', $travels);
-		//RETURN NORMAL LAYOUT
-		$layout->content = Response::forge($content);
+
+		if(($key === $secretKey)){
+			$pass = Input::param("pass");
+			$newPass = md5($newPass);
+	                $query = \DB::update('users');
+	                $query->value('PassHash', $newPass);
+
+		}
+
 		return $layout;
 	}
 
