@@ -1,8 +1,9 @@
 <?php
 use Model\Travel;
-use Model\ormtravel; //new
+use Model\ormtravel; 
 use Model\ormbrochure; 
 use Model\ormattraction;
+use Model\ormusers; //new
 /**
  * Travel Controller
  * use public function name() to add a page
@@ -491,6 +492,7 @@ class Controller_SouthDakota extends Controller
 		$layout->content = Response::forge($content);
 		return $layout;
 	}
+
 	
 //		ABOUT SECTION		//
                 public function action_about()
@@ -520,9 +522,13 @@ class Controller_SouthDakota extends Controller
 	{
 		$layout = View::forge('southdakota/layoutfull');
 		$content = View::forge('southdakota/forgot');
-		$session = Session::instance();
-		$username = $session->get('username');
-		$id = $session->get('userid');
+//		$session = Session::instance();
+
+		$username = \DB::select('username')->from('users');
+//		$userID = Session::get->('userid');
+		$secretKey = md5(uniqid($username), true);
+		$query = \DB::update('users');
+		$query->value('secretKey', $secretKey);
 		$travels = travel::getAll();
 		$content->set_safe('travels', $travels);
 		//RETURN NORMAL LAYOUT
@@ -531,13 +537,12 @@ class Controller_SouthDakota extends Controller
 	}
 
 	       //			PASSWORD RESET			//
-        	public function action_reset()
+        	public function action_reset($key)
 	{
 		$layout = View::forge('southdakota/layoutfull');
 		$content = View::forge('southdakota/reset');
-		$session = Session::instance();
-		$username = $session->get('username');
-		$id = $session->get('userid');
+		$username = \DB::select('username')->from('users');
+		$secretKey = \DB::select('secretKey')->from('users');
 		$travels = travel::getAll();
 		$content->set_safe('travels', $travels);
 		//RETURN NORMAL LAYOUT
