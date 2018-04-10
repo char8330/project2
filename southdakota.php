@@ -1,6 +1,6 @@
 <?php
 use Model\Travel;
-use Model\ormtravel; 
+use Model\ormtravel; //new
 use Model\ormbrochure; 
 use Model\ormattraction;
 use Model\ormusers; //new
@@ -15,6 +15,187 @@ class Controller_SouthDakota extends Controller
 	/**
 	 * Shows a list of all travel items
 	 */
+                      //		SEND EMAIL FOR PASSWORD RESET		//
+        	public function action_forgot()
+	{
+		$layout = View::forge('southdakota/layoutfull');
+		$content = View::forge('southdakota/forgot');
+               
+		//$key = $_POST['ah'];
+		//$courses = ormusers::find('first',  array('where' => array('secretKey' => $key)));
+//			$courses = ormusers::find('all');
+//                $content->set_safe('key', $courses['secretKey']); //demos? 
+	//		$content->set_safe('key', $courses);
+				$travels = travel::getAll();
+                $content->set_safe('travels', $travels);
+				$secretKey = base64_encode(openssl_random_pseudo_bytes(32));
+                $mailTo = Input::param("email");
+				$username = ormusers::find('first', array('where' => array ('email' => $mailTo)));
+				echo $username['username'];
+                //$username = \DB::select('username')->from('users');
+               // $mailTo = Input::param("email");
+
+            echo $mailTo;
+                if(isset($mailTo)){
+                $subject = "Password Reset";
+                $content = 'Please follow this link to reset password https://www.cs.colostate.edu/~jtperea/ct310/index.php/southdakota/reset/'.$secretKey;
+                error_reporting(0);
+               if(mail($mailTo, $subject, $content)){
+                                echo "<p>Reset link sent to $mailTo</p>";
+                        }
+                        else {
+                                echo "<p>There was an error trying to reset your password.</p>\n";
+                        }
+        }
+				$username = ormusers::find('first', array('where' => array ('email' => $mailTo)));
+				//echo $username['username'];
+				
+				//$username->secretKey = '111111'; //$secretKey;
+				//$username->save();
+                $query = \DB::update('users');
+                $query->value('secretKey', $secretKey);
+                $query->where('username', $username)->execute();
+				
+				
+		$layout->content = Response::forge($content);
+		return $layout;
+	
+}
+	
+	public function action_forget2(){
+			$travels = travel::getAll();
+					$content = View::forge('southdakota/forgot');
+
+                $content->set_safe('travels', $travels);
+				//$secretKey = base64_encode(openssl_random_pseudo_bytes(32));
+				$secretKey= (string) round(microtime(true) * 1000);
+				//$secretKey = '1234';
+                $mailTo = Input::param("email");
+				$username = ormusers::find('first', array('where' => array ('email' => $mailTo)));
+
+				$username->secretKey = $secretKey;
+				$username->save();
+                //$username = \DB::select('username')->from('users');
+               // $mailTo = Input::param("email");
+                echo $mailTo;
+                if(isset($mailTo)){
+                $subject = "Password Reset";
+                $content = 'Please follow this link to reset password https://www.cs.colostate.edu/~jtperea/ct310/index.php/southdakota/reset/'.$secretKey;
+                error_reporting(0);
+               if(mail($mailTo, $subject, $content)){
+                                echo "<p>Reset link sent to $mailTo</p>";
+                        }
+                        else {
+                                echo "<p>There was an error trying to reset your password.</p>\n";
+                        }
+        }
+	}
+
+          	       //			PASSWORD RESET			//
+        	public function action_reset($key)
+	{
+		$layout = View::forge('southdakota/layoutfull');
+		$content = View::forge('southdakota/reset'); 
+		//	echo $key;
+		//$username = ormusers::find('first', array('where' => array ('PassHash' => $key)));
+
+				//$username->secretKey = $secretKey;
+				//$username->save();
+				
+                $travels = travel::getAll();
+                $content->set_safe('travels', $travels);
+                $layout->content = Response::forge($content);
+		//$username = \DB::select('username')->from('users');
+		//$secretKey = \DB::select('secretKey')->from('users');
+		$secretKey = ormusers::find('first', array('where' => array ('secretKey' => $key)));
+		$content->set_safe('obj',$secretKey);
+		//echo $secretKey['secretKey'];
+		if(($key === $secretKey['secretKey'])){
+			
+			$username = $secretKey['username'];
+	         $content->set_safe('name', $username);
+	         
+	         
+				//change to update password
+		/*	$password = ormusers::find('first', array('where' => array ('PassHash' => $newPass)));
+
+			$password->PassHash = $newPass;
+			$password->save();*/
+			}
+		
+	 
+		
+		return $layout;
+		
+	}
+
+	public function action_newpass()
+	{
+		$layout = View::forge('southdakota/layoutfull');
+		$content = View::forge('southdakota/newpass'); 
+	
+                $travels = travel::getAll();
+                $content->set_safe('travels', $travels);
+                $layout->content = Response::forge($content);
+                
+                 $pass = Input::param("pass3");
+                 $user = Input::param("name");
+  
+			$newPass = md5($pass);
+				//change to update password
+			$password = ormusers::find('first', array('where' => array ('username' => $user)));
+
+			$password->PassHash = $newPass;
+			$password->save();
+
+		
+		return $layout;
+	}
+
+	       	 
+	 
+	 public function post_saveTutorialParagraph()
+{
+	//get the sectionID, paragraph text and paragraph code from the input
+         $tutorialSectionid = $_POST['tutorial-section'];
+	 $paragraphText = $_POST['paragraph-text'];
+	 $paragraphCode = $_POST['paragraph-code'];
+	 $imageFileName="";
+
+	 //replace all < to < except for the code tag (replace back)
+	 $paragraphCode = str_replace("<", "<", $paragraphCode);
+
+	 $paragraphCode = str_replace(" DOCROOT.'/assets/img','randomize' => true,'ext_whitelist' => array('img', 'jpg', 'jpeg', 'gif', 'png'),");
+
+	 //load the config file
+	 Upload::process($config);
+
+	 //if Upload is valid, save it
+	 if (Upload::is_valid()){
+	 	 Upload::save();
+
+	 	 //extract the filename of the stored image using the array returned by get_files(). Optinally append the fully qualified path to it. Do not do this is your projects
+		 $imageFileName = '../../../assets/img/'.Upload::get_files()[0]['saved_as'];
+	 }
+
+
+	//create the paragraph object and set all values
+	$newTutorialParagraph = new Model\Tutorialstuff\Tutorialparagraph();
+	$newTutorialParagraph->tutorialSectionID = $tutorialSectionid;
+	$newTutorialParagraph->tutorialParagraphCode = $paragraphCode;
+	$newTutorialParagraph->tutorialParagraphText = $paragraphText;
+	$newTutorialParagraph->tutorialParagraphImage = $imageFileName;
+
+	//save the ORM object
+	$newTutorialParagraph->save();
+
+	$layout->content = Response::redirect('tutorial/addTutorialParagraph');
+
+
+}
+	 
+	 
+	 
 	 
 	 
 	       public function get_addEdit($id = null)
@@ -40,14 +221,31 @@ class Controller_SouthDakota extends Controller
                 if($username === 'ct310' || $username === 'jtperea' || $username === 'cjh' || $username === 'aaronadmin')
                 {
                 
-                $result = DB::select ('attID')->from('a')->execute(); // TODO: check if empty/no previous comments
-                $count = sizeof($result);
-	        $name = $count ; //mt_rand() / mt_getrandmax();
-	        
+	        //IMG CODE
+	        $config = array(
+		'path' => DOCROOT.'/assets/img',
+		'randomize' => true,
+		'ext_whitelist' => array('img', 'jpg', 'jpeg', 'gif', 'png'),
+                );
+
+                //load the config file
+                Upload::process($config);
+
+                //if Upload is valid, save it
+                if (Upload::is_valid())
+                {
+                        Upload::save();
+
+                        //extract the filename of the stored image using the array returned by get_files(). Optinally append the fully qualified path to it. Do not do this is your projects
+                        $imageFileName = Upload::get_files()[0]['saved_as']; //GOES IN DB VARCHAR 256
+                }
+                
+
+
                 	$tr = new ormattraction();
-	                $tr->attID = $name;
 	                $tr->firstName = $_POST['att_title'];
           	        $tr->descriptionName = $_POST['att_description'];
+          	        $tr->img=  $imageFileName;
                 	$tr->save();
 	                Response::redirect('index.php/southdakota/allattractions');
 		}
@@ -227,17 +425,27 @@ class Controller_SouthDakota extends Controller
 	//brochure delete/edit
 	
 	
-                public function action_editb($id)
-	{ 
-                        $b = ormbrochure::find($id);
+	    public function post_editb()
+	{                 
+	                
+                         //$entry = ormtravel::find( $_POST['id']);
+                        //$entry->user = $username; //TODO: edits keep name of org poster or admin who edited? 0- attach to each $demo
+                        $brochure_updated = $_POST['b_edit'];
+                        //$newcomment = $_POST['textcomms'];
+                        
+                        //$courses = ormattraction::find('first', array('where' => array('firstName' => $att_name)));
+	
+                        $b = ormbrochure::find($_POST['idb']);
                         //$entry->id = 'My first edit';
                         //$entry->user = $username; //TODO: edits keep name of org poster or admin who edited? 0- attach to each $demo 
-                        $b->quantity = 0;
+                        $b->quantity = $brochure_updated;
                         $b->save();
                 // attach urls to correct attraction index ....indexc/attractionttitle ideally 
                 Response::redirect('index.php/southdakota/indexbrochure');
+
 	}
 	
+            
 	
 		public function action_deleteb($id)
 	{      // if (isset($_POST['delete'])) {
@@ -258,12 +466,9 @@ class Controller_SouthDakota extends Controller
 	 $session = Session::instance();
 	$username = $session->get('username');
 	//if logged in 
-	if($username === 'ct310' || $username === 'jtperea' || $username === 'cjh' || $username === 'aaronadmin'){
+	//all
+	if($username === 'ct310' || $username === 'jtperea' || $username === 'cjh' || $username === 'aaronadmin'|| $username === 'aaronper' || $username === 'bsay'){
 	
-                $result = DB::select ('comm')->from('comments')->execute(); // TODO: check if empty/no previous comments
-                $count = sizeof($result);
-	        $name = $count ; //mt_rand() / mt_getrandmax();
-	        
 	
 		//extract course name, number and assignments from the input parameters
 		//$name = $_POST['id'];
@@ -273,7 +478,6 @@ class Controller_SouthDakota extends Controller
 
 		//create a new ORM object and populate it
 		$new = new ormtravel();
-		$new->id = $name; //TODO: don't specify - autoincrement
 		$new->user = $username;
 		$new->comm = $assignments;
 				
@@ -324,6 +528,12 @@ class Controller_SouthDakota extends Controller
 		
 		//$content->set_safe('att', $courses);
 		
+		//admin 
+		mail("cassidyharless95@gmail.com","Recent Brochure Order On Your Site",$msg);
+		mail("jtperea@rams.colostate.edu","Recent Brochure Order On Your Site",$msg);
+		
+		mail("Aaron.Pereira@colostate.edu","Recent Brochure Order On Your Site",$msg);
+		mail("ct310@cs.colostate.edu","Recent Brochure Order On Your Site",$msg);
 		
                 $session = Session::instance();
                 $username = $session->get('username');
@@ -333,7 +543,18 @@ class Controller_SouthDakota extends Controller
                 if ($username === 'jtperea'){
 		mail("jtperea@rams.colostate.edu","Your Recent Brochure Order",$msg);
 		}
-                
+                 if ($username === 'aaronper'){
+		mail("aaronper@cs.colostate.edu","Your Recent Brochure Order",$msg);
+		}
+                if ($username === 'aaronadmin'){
+		mail("Aaron.Pereira@colostate.edu","Your Recent Brochure Order",$msg);
+		}
+		 if ($username === 'bsay'){
+		mail("bsay@cs.colostate.edu","Your Recent Brochure Order",$msg);
+		}
+                if ($username === 'ct310'){
+		mail("ct310@cs.colostate.edu","Your Recent Brochure Order",$msg);
+		}
                 
                 //$used = ormtravel::find('all', array('where' => array('attraction' => $demo['firstName'])));
                 // prepare a delete statement// prep 
@@ -389,7 +610,7 @@ class Controller_SouthDakota extends Controller
 	 $session = Session::instance();
 	$username = $session->get('username');
 	//if logged in 
-	if($username === 'ct310' || $username === 'jtperea' || $username === 'cjh' || $username === 'aaronadmin'){
+	if($username === 'ct310' || $username === 'jtperea' || $username === 'cjh' || $username === 'aaronadmin'|| $username === 'aaronper' || $username === 'bsay'){
 	
 		if (isset($_POST['comment2'])) {
 		$assignments = $_POST['comment2'];
@@ -422,11 +643,7 @@ class Controller_SouthDakota extends Controller
 	{
 	 $session = Session::instance();
 	$username = $session->get('username');
-	if($username === 'ct310' || $username === 'jtperea' || $username === 'cjh' || $username === 'aaronadmin'){
-	
-                $result = DB::select ('quantity')->from('brochure')->execute(); // TODO: check if empty/no previous comments
-                $count = sizeof($result);
-	        $name = $count ; //mt_rand() / mt_getrandmax();
+	if($username === 'ct310' || $username === 'jtperea' || $username === 'cjh' || $username === 'aaronadmin'|| $username === 'aaronper' || $username === 'bsay'){
 	
 		//extract course name, number and assignments from the input parameters
 		//$name = $_POST['id'];
@@ -436,7 +653,6 @@ class Controller_SouthDakota extends Controller
 
 		//create a new ORM object and populate it
 		$new = new ormbrochure();
-		$new->id = $name;
 		$new->user = $username;
 		$new->quantity = $assignments;
 		
@@ -492,7 +708,6 @@ class Controller_SouthDakota extends Controller
 		$layout->content = Response::forge($content);
 		return $layout;
 	}
-
 	
 //		ABOUT SECTION		//
                 public function action_about()
@@ -511,140 +726,11 @@ class Controller_SouthDakota extends Controller
                         $content->set_safe('id',$id);
                         $layout->content = Response::forge($content);
                         return $layout;
- 	       }
+                }
 		//RETURNS NORMAL LAYOUT
                 $layout->content = Response::forge($content);
                 return $layout;
         }
-
-            //		SEND EMAIL FOR PASSWORD RESET		//
-        	public function action_forgot()
-	{
-		$layout = View::forge('southdakota/layoutfull');
-		$content = View::forge('southdakota/forgot');
-               
-		//$key = $_POST['ah'];
-		//$courses = ormusers::find('first',  array('where' => array('secretKey' => $key)));
-//			$courses = ormusers::find('all');
-//                $content->set_safe('key', $courses['secretKey']); //demos? 
-	//		$content->set_safe('key', $courses);
-
-				$travels = travel::getAll();
-                $content->set_safe('travels', $travels);
-				$secretKey = base64_encode(openssl_random_pseudo_bytes(32));
-
-                $mailTo = Input::param("email");
-
-				$username = ormusers::find('first', array('where' => array ('email' => $mailTo)));
-				echo $username['username'];
-
-                //$username = \DB::select('username')->from('users');
-
-               // $mailTo = Input::param("email");
-		$layout = View::forge('southdakota/layoutfull');
-				$content = View::forge('southdakota/forget2');
-				$travels = travel::getAll();
-                $content->set_safe('travels', $travels);
-				$secretKey = base64_encode(openssl_random_pseudo_bytes(32));
-
-                $mailTo = Input::param("email");
-
-				$username = ormusers::find('first', array('where' => array ('email' => $mailTo)));
-				echo $username['username'];
-
-                //$username = \DB::select('username')->from('users');
-
-               // $mailTo = Input::param("email");
-                echo $mailTo;
-                if(isset($mailTo)){
-
-                $subject = "Password Reset";
-                $content = 'Please follow this link to reset password https://www.cs.colostate.edu/~jtperea/ct310/index.php/southdakota/reset/'.$secretKey;
-                error_reporting(0);
-               if(mail($mailTo, $subject, $content)){
-                                echo "<p>Reset link sent to $mailTo</p>";
-                        }
-                        else {
-                                echo "<p>There was an error trying to reset your password.</p>\n";
-                        }                echo $mailTo;
-                if(isset($mailTo)){
-
-                $subject = "Password Reset";
-                $content = 'Please follow this link to reset password https://www.cs.colostate.edu/~jtperea/ct310/index.php/southdakota/reset/'.$secretKey;
-                error_reporting(0);
-               if(mail($mailTo, $subject, $content)){
-                                echo "<p>Reset link sent to $mailTo</p>";
-                        }
-                        else {
-                                echo "<p>There was an error trying to reset your password.</p>\n";
-                        }
-        }
-				//$username = ormusers::find('first', array('where' => array ('email' => $mailTo)));
-				//echo $username['username'];
-				
-				//$username->secretKey = '111111'; //$secretKey;
-				//$username->save();
-                $query = \DB::update('users');
-                $query->value('secretKey', $secretKey)->execute();
-                
-				
-
-		$layout->content = Response::forge($content);
-		return $layout;
-	}
-	
-	/*public function action_forgot2(){
-			$travels = travel::getAll();
-                $content->set_safe('travels', $travels);
-				$secretKey = base64_encode(openssl_random_pseudo_bytes(32));
-
-                $mailTo = Input::param("email");
-
-				$username = ormusers::find('first', array('where' => array ('email' => $mailTo)));
-				echo $username['username'];
-
-                //$username = \DB::select('username')->from('users');
-
-               // $mailTo = Input::param("email");
-                echo $mailTo;
-                if(isset($mailTo)){
-
-                $subject = "Password Reset";
-                $content = 'Please follow this link to reset password https://www.cs.colostate.edu/~jtperea/ct310/index.php/southdakota/reset/'.$secretKey;
-                error_reporting(0);
-               if(mail($mailTo, $subject, $content)){
-                                echo "<p>Reset link sent to $mailTo</p>";
-                        }
-                        else {
-                                echo "<p>There was an error trying to reset your password.</p>\n";
-                        }
-        }
-	}*/
-
-	       //			PASSWORD RESET			//
-        	public function action_reset($key)
-	{
-		$layout = View::forge('southdakota/layoutfull');
-		$content = View::forge('southdakota/reset');
-
-                $travels = travel::getAll();
-                $content->set_safe('travels', $travels);
-                $layout->content = Response::forge($content);
-
-		$username = \DB::select('username')->from('users');
-		$secretKey = \DB::select('secretKey')->from('users');
-
-		if(($key === $secretKey)){
-			$pass = Input::param("pass");
-			$newPass = md5($newPass);
-	                $query = \DB::update('users');
-	                $query->value('PassHash', $newPass);
-
-		}
-
-		return $layout;
-	}
-
 //		LOGIN SECTION		//
 	public function action_login()
         {
@@ -665,7 +751,7 @@ class Controller_SouthDakota extends Controller
                 $username = Input::post('username');
                 $password = Input::post('password');
 		//hardcoded users & passwords
-                if(($username === 'ct310' && md5($password) === 'a6cebbf02cc311177c569525a0f119d7') || ($username === 'jtperea' && md5($password) === 'f869ce1c8414a264bb11e14a2c8850ed') || ($username === 'cjh' && md5($password) === '20ee80e63596799a1543bc9fd88d8878'))
+                if(($username === 'ct310' && md5($password) === 'a6cebbf02cc311177c569525a0f119d7') || ($username === 'jtperea' && md5($password) === 'f869ce1c8414a264bb11e14a2c8850ed') || ($username === 'cjh' && md5($password) === '20ee80e63596799a1543bc9fd88d8878') || ($username === 'bsay' && md5($password) === '790f6b6cf6a6fbead525927d69f409fe') || ($username === 'aaronper' && md5($password) === '449a36b6689d841d7d27f31b4b7cc73a') || ($username === 'aaronadmin' && md5($password) === 'd31bfd85d0a81046f70304ebfecdffbf'))
                 {
                         Session::create();
                         Session::set('username', $username);
@@ -700,7 +786,7 @@ class Controller_SouthDakota extends Controller
                 $session = Session::instance();
                 $username = $session->get('username');
 		//only viewable by admin accounts
-                if($username === 'ct310' || $username === 'jtperea' || $username === 'cjh' || $username === 'aaronadmin')
+                if($username === 'ct310' || $username === 'jtperea' || $username === 'cjh' || $username === 'aaronadmin'|| $username === 'aaronper' || $username === 'bsay')
                 {		
                 	$layout = View::forge('southdakota/layoutfull');
 	                $content = View::forge('southdakota/view');
@@ -731,4 +817,6 @@ class Controller_SouthDakota extends Controller
 	{
 		return Response::forge(Presenter::forge('welcome/404'), 404);
 	}
+	
+	
 }
