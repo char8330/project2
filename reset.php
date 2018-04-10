@@ -2,12 +2,6 @@
 <?php;
 	$em = Session::get("mailTo");
 	//$em = Input::param("email");
-	if(isset($em)){
-		echo "$em";
-	} else {
-
-		echo "Nope";
-	}
 ?>
 	<form method="post" action="login">
 	Enter new password here: <input type="text" name="password" placeholder="New Password"> 
